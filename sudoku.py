@@ -2,10 +2,7 @@
 
 import pyxel
 import random
-import os
-from os import path
 import numpy as np
-import itertools as it
 from copy import deepcopy
 
 game_won = False
@@ -20,9 +17,6 @@ line = lines[line_number]
 line = line.strip()
 puzzle, solution = line.split(',')
 print(puzzle, solution)
-
-def generate_random_puzzle():
-    pass
 
 ## Make a board structure to fill in the data with.
 empty_board = [[0 for _ in range(9)] for _ in range(9)]
@@ -111,8 +105,6 @@ boxes = [
     [7, 7, 7, 8, 8, 8, 9, 9, 9],
     [7, 7, 7, 8, 8, 8, 9, 9, 9],
 ]
-
-invalid_puzzle = generate_random_puzzle()
 
 def box_valid(board):
     board = np.array(board)
@@ -294,4 +286,3 @@ def board_is_full(board):
 
 pyxel.run(update, draw)
 print("That was fun, why don't we play again?")
-
