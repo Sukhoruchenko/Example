@@ -98,18 +98,13 @@ print(board.format(*[unit if unit else ' ' for row in puzzle_board for unit in r
 print(board.format(*[unit if unit else ' ' for row in update_board(puzzle_board, 4, 4, 8) for unit in row]))
 
 pyxel.cls(col=3)
-pyxel.text(1, 1, "8", 0)
-# pyxel.show()
-is_valid = True
 print(pyxel.load('my_resource.pyxres', True, True))
 image = pyxel.image(0)
-print(dir(image))
 pyxel.mouse(True)
             
 def draw():
     global puzzle_board
     global solution_board
-    global is_valid
     global cell_coordinates
     global selected_value
     global game_won
@@ -160,7 +155,6 @@ def board_is_full(board):
 def update():
     global puzzle_board
     global solution_board
-    global is_valid
     global cell_coordinates
     global selected_value
     global game_won
@@ -188,7 +182,6 @@ def update():
             puzzle_board[x][y] = selected_value
         else:
             puzzle_board[x][y] = 0
-    is_valid = board_valid(puzzle_board, solution_board)
     if board_is_full(puzzle_board):
         print('full')
         if board_valid(puzzle_board, solution_board):
