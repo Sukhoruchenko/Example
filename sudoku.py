@@ -75,23 +75,13 @@ height_size = 183
 pyxel.init(width_size, height_size, title="Sudoku Game")
 
 def board_valid(task_board, solution_board):
-    if rows_valid(task_board):
-        if cols_valid(task_board):
-            if box_valid(task_board):
-                pass
-            else:
-                return False
-        else:
-                return False
-    else:
-                return False
+    if not (rows_valid(task_board) and cols_valid(task_board) and box_valid(task_board)):
+        return False
+    
     for pcol, scol in zip(task_board, solution_board):
         for pval, sval in zip(pcol, scol):
-            if pval:
-                if pval == sval:
-                    continue
-                else:
-                    return False
+            if pval and pval != sval:
+                return False
     return True
 
 ## change board
