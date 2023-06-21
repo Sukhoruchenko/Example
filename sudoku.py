@@ -7,9 +7,8 @@ from copy import deepcopy
 
 game_won = False
 
-f = open('sudoku.csv')
-text = f.read()
-lines = text.splitlines()
+with open('sudoku.csv') as f:
+    lines = f.read().splitlines()
 
 # Get one of the puzzles and its corresponding solution
 line_number = random.randint(0, len(lines))
