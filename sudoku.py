@@ -20,55 +20,17 @@ print(puzzle, solution)
 
 ## Make a board structure to fill in the data with.
 empty_board = [[0 for _ in range(9)] for _ in range(9)]
-
-print("""
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
----------------------
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
----------------------
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
-""".format(*[val if val else ' ' for row in empty_board for val in row]))
+rows = ('{} {} {} | {} {} {} | {} {} {}' + '\n')*3
+board = ((rows + '---------------------' + '\n')*2 + rows)
+print(board.format(*[val if val else ' ' for row in empty_board for val in row]))
 
 ## Fill Board with puzzle data
 spots = iter(puzzle)
 puzzle_board = [[int(next(spots)) for _ in range(9)] for _ in range(9)] 
 solution_spots = iter(solution)
 solution_board = [[int(next(solution_spots)) for _ in range(9)] for _ in range(9)]  
-
-print("""
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
----------------------
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
----------------------
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
-""".format(*[val if val else ' ' for row in puzzle_board for val in row]))
-
-
-print("""
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
----------------------
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
----------------------
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
-""".format(*[val if val else ' ' for row in solution_board for val in row]))
+print(board.format(*[val if val else ' ' for row in puzzle_board for val in row]))
+print(board.format(*[val if val else ' ' for row in solution_board for val in row]))
 
 ## Check if the board is valid
 def rowsValid(board):
@@ -94,17 +56,7 @@ print(cols_vald(solution_board))
 
 # The little 3x3 rectangles on a sudoku board are called "boxes" 
 # (https://simple.wikipedia.org/wiki/Sudoku)
-boxes = [
-    [1, 1, 1, 2, 2, 2, 3, 3, 3],
-    [1, 1, 1, 2, 2, 2, 3, 3, 3],
-    [1, 1, 1, 2, 2, 2, 3, 3, 3],
-    [4, 4, 4, 5, 5, 5, 6, 6, 6],
-    [4, 4, 4, 5, 5, 5, 6, 6, 6],
-    [4, 4, 4, 5, 5, 5, 6, 6, 6],
-    [7, 7, 7, 8, 8, 8, 9, 9, 9],
-    [7, 7, 7, 8, 8, 8, 9, 9, 9],
-    [7, 7, 7, 8, 8, 8, 9, 9, 9],
-]
+boxes = [[i]*9 for i in range(1,10)]
 
 def box_valid(board):
     board = np.array(board)
@@ -150,34 +102,8 @@ def update_board(board, row, col, value):
 
 cell_selected = (0, 0)
 
-print("""
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
----------------------
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
----------------------
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
-""".format(*[val if val else ' ' for row in puzzle_board for val in row]))
-
-
-print("""
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
----------------------
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
----------------------
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
-{} {} {} | {} {} {} | {} {} {}
-""".format(*[val if val else ' ' for row in update_board(puzzle_board, 4, 4, 8) for val in row]))
+print(board.format(*[val if val else ' ' for row in puzzle_board for val in row]))
+print(board.format(*[val if val else ' ' for row in update_board(puzzle_board, 4, 4, 8) for val in row]))
 
 pyxel.cls(3)
 pyxel.text(1, 1, "8", 0)
@@ -188,6 +114,14 @@ image = pyxel.image(0)
 print(dir(image))
 pyxel.mouse(True)
 
+def board_is_full(board):
+    for row in board:
+        for val in row:
+            if val == 0:
+                return False
+            else:
+                return True
+            
 def draw():
     global puzzle_board
     global solution_board
@@ -268,21 +202,13 @@ def update():
     is_valid = board_valid(puzzle_board, solution_board)
     if board_is_full(puzzle_board):
         print('full')
-        if board_valid(puzzle_board):
+        if board_valid(puzzle_board, solution_board):
             print('hi')
             game_won = True
         else:
             game_won = False
     else:
         game_won = False
-
-def board_is_full(board):
-    for row in board:
-        for val in row:
-            if val == 0:
-                return False
-            else:
-                return True
 
 pyxel.run(update, draw)
 print("That was fun, why don't we play again?")
