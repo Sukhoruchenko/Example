@@ -70,7 +70,10 @@ def box_valid(board):
     return True
 
 print(box_valid(solution_board))
-pyxel.init(156, 183, title="Sudoku Game")
+
+width_size = 156
+height_size = 183
+pyxel.init(width_size, height_size, title="Sudoku Game")
 
 def board_valid(task_board, solution_board):
     if rows_valid(task_board):
@@ -100,12 +103,12 @@ def update_board(board, row, col, value):
     new_board[row][col] = value
     return new_board
 
-cell_selected = (0, 0)
+cell_coordinates = (0, 0)
 
 print(board.format(*[unit if unit else ' ' for row in puzzle_board for unit in row]))
 print(board.format(*[unit if unit else ' ' for row in update_board(puzzle_board, 4, 4, 8) for unit in row]))
 
-pyxel.cls(3)
+pyxel.cls(col=3)
 pyxel.text(1, 1, "8", 0)
 # pyxel.show()
 is_valid = True
@@ -118,47 +121,44 @@ def draw():
     global puzzle_board
     global solution_board
     global is_valid
-    global cell_selected
+    global cell_coordinates
     global selected_value
     global game_won
 
     if game_won:
         # Make bakcground yellow if game is won
-        pyxel.cls(10)  
+        pyxel.cls(col=10)  
     for i, row in enumerate(puzzle_board):
         for j, value in enumerate(row):
             x_offset = 2
             y_offset = 2
             # where to put the subimage
-            x = i*16 + i + x_offset
-            y = j*16 + j + y_offset
             image_size = 16
-            width = image_size
-            height = image_size
+            x = i*image_size + i + x_offset
+            y = j*image_size + j + y_offset
             u_width = 0
-            v_height = value * 16
-            if cell_selected == (i, j):
+            v_height = value * image_size
+            if cell_coordinates == (i, j):
                 transparent_color = 5
             else:
                 transparent_color = 10
             # copy part of image from resource file to the screen
-            pyxel.blt(x, y, 0, u_width, v_height, width, height, transparent_color)  
+            pyxel.blt(x, y, 0, u_width, v_height, image_size, image_size, transparent_color)  
     # Draw the lines of the board
-    lines_col = 0
-    pyxel.rect(0 + x_offset, 50 + y_offset, w=16*9 + 8, h=1, col=lines_col)
-    pyxel.rect(0 + x_offset, 101 + y_offset, w=16*9 + 8, h=1, col=lines_col)
-    pyxel.rect(50 + x_offset, 0 + y_offset, h=16*9 +8, w=1, col=lines_col)
-    pyxel.rect(101 + x_offset, 0 + y_offset, h=16*9+ 8, w=1, col=lines_col)
-    pyxel.rect(0, 156, h=7, w=200, col=0)
+    pyxel.rect(x_offset, 50 + y_offset, w=150, h=1, col=0)
+    pyxel.rect(x_offset, 100 + y_offset, w=150, h=1, col=0)
+    pyxel.rect(50 + x_offset, y_offset, h=150, w=1, col=0)
+    pyxel.rect(100 + x_offset, y_offset, h=150, w=1, col=0)
+    pyxel.rect(x=0, y=156, h=5, w=200, col=0)
     for i in range(9):
         if selected_value == i + 1:
             transparent_color = 5
         else:
             transparent_color = 10
-        pyxel.blt(i*16 + i + x_offset, 165, 0, u=0, v = (i+1) * 16, w=image_size, h=image_size, colkey=transparent_color)  
+        pyxel.blt(x = i*16 + i + x_offset, y=165, img=0, u=0, v = (i+1) * 16, w=image_size, h=image_size, colkey=transparent_color)  
 
 def get_board_cage(mouse_x, mouse_y):
-    return min(int(mouse_x // 17), 8), min(int(mouse_y // 17), 8)
+    return min(int(mouse_x // 20), 8), min(int(mouse_y // 20), 8)
 
 def board_is_full(board):
     for row in board:
@@ -172,7 +172,7 @@ def update():
     global puzzle_board
     global solution_board
     global is_valid
-    global cell_selected
+    global cell_coordinates
     global selected_value
     global game_won
 
@@ -183,8 +183,8 @@ def update():
         mouse_position = (pyxel.mouse_x,pyxel.mouse_y)
         print(mouse_position)
         board_cage = get_board_cage(*mouse_position)
-        if mouse_position[1] < 155:
-            cell_selected = board_cage
+        if mouse_position[1] < width_size:
+            cell_coordinates = board_cage
         else:
             selected_value = board_cage[0] + 1
             print('selected value:',selected_value)
